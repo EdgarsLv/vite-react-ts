@@ -1,4 +1,4 @@
-import { increment, decrement } from '../../redux/slices/counterSlice'
+import { increment, decrement, incrementByAmount } from '../../redux/slices/counterSlice'
 import { Link } from 'react-router-dom'
 import { useAppSelector, useAppDispatch } from '../../redux/store'
 
@@ -8,6 +8,9 @@ function About() {
 
   const handleDecrement = () => {
     dispatch(decrement())
+  }
+  const handleIncrementByAmount = () => {
+    dispatch(incrementByAmount(2))
   }
   return (
     <div>
@@ -20,6 +23,7 @@ function About() {
         <h4>counter: {count}</h4>
         <button onClick={() => dispatch(increment())}>increment</button>
         <button onClick={handleDecrement}>decrement</button>
+        <button onClick={handleIncrementByAmount}>decrement</button>
       </div>
     </div>
   )
