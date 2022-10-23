@@ -1,20 +1,24 @@
-import Router from './routes'
+import { router } from './routes'
 import { HelmetProvider } from 'react-helmet-async'
-import { BrowserRouter } from 'react-router-dom'
+import { RouterProvider } from 'react-router-dom'
 import { AuthProvider } from './contexts'
+import { ThemeProvider } from './theme'
 import { Provider as ReduxProvider } from 'react-redux'
+import { ThemeProvider as ModeProvider } from './contexts'
 import { store } from './redux/store'
 
 function App() {
   return (
     <ReduxProvider store={store}>
-      <BrowserRouter>
-        <AuthProvider>
-          <HelmetProvider>
-            <Router />
-          </HelmetProvider>
-        </AuthProvider>
-      </BrowserRouter>
+      <AuthProvider>
+        <HelmetProvider>
+          <ModeProvider>
+            <ThemeProvider>
+              <RouterProvider router={router} />
+            </ThemeProvider>
+          </ModeProvider>
+        </HelmetProvider>
+      </AuthProvider>
     </ReduxProvider>
   )
 }

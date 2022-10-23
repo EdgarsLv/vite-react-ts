@@ -1,5 +1,4 @@
 import { createContext, useEffect, useReducer, useState, useContext } from 'react'
-// import { supabase } from '../services/supabase'
 
 const initialState = {
   isAuthenticated: false,
@@ -47,32 +46,6 @@ function AuthProvider({ children }: any) {
     }
   }, [session])
 
-  // useEffect(() => {
-  //   setSession(supabase.auth.session())
-
-  //   const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
-
-  //     setSession(session)
-  //   })
-
-  //   if (session) {
-  //     dispatch({
-  //       type: 'INITIALISE',
-  //       payload: { isAuthenticated: true, user: session.user },
-  //     })
-  //   } else {
-  //     dispatch({
-  //       type: 'INITIALISE',
-  //       payload: { isAuthenticated: false, user: null },
-  //     })
-  //   }
-
-  //   return () => {
-  //     authListener.unsubscribe()
-  //   }
-
-  // }, [session])
-
   const login = () => {
     setSession(true)
   }
@@ -82,11 +55,6 @@ function AuthProvider({ children }: any) {
   const logout = () => {
     setSession(null)
   }
-  // const login = (email, password) => supabase.auth.signIn({ email, password })
-
-  // const register = ({ email, password }) => supabase.auth.signUp({ email, password })
-
-  // const logout = () => supabase.auth.signOut()
 
   return (
     <AuthContext.Provider

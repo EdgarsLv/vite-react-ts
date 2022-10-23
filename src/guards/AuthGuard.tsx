@@ -1,22 +1,22 @@
 import { useAuth } from '../contexts/AuthContext'
-import { useState } from 'react'
+import { ReactElement, useState } from 'react'
 import { Navigate, useLocation } from 'react-router-dom'
-import Login from '../pages/auth'
+import { Spinner } from '../components'
 
-export default function AuthGuard({ children }: any) {
+export default function AuthGuard({ children }: { children: ReactElement }) {
   const { isAuthenticated, isInitialized } = useAuth()
   const { pathname } = useLocation()
   const [requestedLocation, setRequestedLocation] = useState<any>(null)
 
   if (!isInitialized) {
-    return <div>loading</div>
+    return <Spinner />
   }
 
   if (!isAuthenticated) {
     if (pathname !== requestedLocation) {
       setRequestedLocation(pathname)
     }
-    return <Login />
+    return <Navigate to='login' replace={true} />
   }
 
   if (requestedLocation && pathname !== requestedLocation) {

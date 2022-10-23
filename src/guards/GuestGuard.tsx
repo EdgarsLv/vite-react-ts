@@ -1,13 +1,12 @@
 import { useAuth } from '../contexts/AuthContext'
 import { Navigate } from 'react-router-dom'
+import { ReactElement } from 'react'
 
-const PATH_MAIN = { root: '/' }
-
-export default function GuestGuard({ children }: any) {
+export default function GuestGuard({ children }: { children: ReactElement }) {
   const { isAuthenticated } = useAuth()
 
   if (isAuthenticated) {
-    return <Navigate to={PATH_MAIN.root} />
+    return <Navigate to='/' />
   }
 
   return <>{children}</>

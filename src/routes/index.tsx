@@ -1,59 +1,73 @@
-import { Suspense, lazy } from 'react'
-import { Navigate, useRoutes, RouteObject } from 'react-router-dom'
+import { Suspense, lazy, ComponentType } from 'react'
+import { Navigate, RouteObject, createBrowserRouter } from 'react-router-dom'
 import { AuthGuard, GuestGuard } from '../guards'
+import { Spinner } from '../components'
 
-const Loadable = (Component: any) => (props: any) => {
+type AnyProps = {
+  [key: string]: any
+}
+const Loadable = (Component: ComponentType) => (props: AnyProps) => {
   return (
-    <Suspense
-      fallback={
-        <div>
-          <p>loading...</p>
-        </div>
-      }
-    >
+    <Suspense fallback={<Spinner />}>
       <Component {...props} />
     </Suspense>
   )
 }
 
-export default function Router() {
-  return useRoutes([
-    {
-      path: '/',
-      element: (
-        <AuthGuard>
-          <Home />
-        </AuthGuard>
-      ),
-    },
-    {
-      path: 'about',
-      element: (
-        <AuthGuard>
-          <About />
-        </AuthGuard>
-      ),
-    },
-    {
-      path: 'contacts',
-      element: (
-        <AuthGuard>
-          <Contacts />
-        </AuthGuard>
-      ),
-    },
-    {
-      path: 'login',
-      element: (
-        <GuestGuard>
-          <Login />
-        </GuestGuard>
-      ),
-    },
-  ] as RouteObject[])
-}
+const MainLayout = Loadable(lazy(() => import('../layout')))
 
-const Home = Loadable(lazy(() => import('../pages/home')))
-const About = Loadable(lazy(() => import('../pages/about')))
-const Contacts = Loadable(lazy(() => import('../pages/contacts')))
-const Login = Loadable(lazy(() => import('../pages/auth')))
+const Page1 = Loadable(lazy(() => import('../pages/page1')))
+const Page2 = Loadable(lazy(() => import('../pages/page2')))
+const Page3 = Loadable(lazy(() => import('../pages/page3')))
+
+const Login = Loadable(lazy(() => import('../auth/login')))
+const Register = Loadable(lazy(() => import('../auth/register')))
+
+const NotFound = Loadable(lazy(() => import('../pages/notFound')))
+
+export const router = createBrowserRouter([
+  {
+    path: '/',
+    element: (
+      <AuthGuard>
+        <MainLayout />
+      </AuthGuard>
+    ),
+    children: [
+      { element: <Page1 />, index: true },
+      {
+        path: 'page2',
+        element: <Page2 />,
+      },
+      {
+        path: 'page3',
+        element: <Page3 />,
+      },
+    ],
+  },
+
+  {
+    path: 'login',
+    element: (
+      <GuestGuard>
+        <Login />
+      </GuestGuard>
+    ),
+  },
+  {
+    path: 'register',
+    element: (
+      <GuestGuard>
+        <Register />
+      </GuestGuard>
+    ),
+  },
+  {
+    path: '404',
+    element: <NotFound />,
+  },
+  {
+    path: '*',
+    element: <Navigate to='404' replace />,
+  },
+] as RouteObject[])
